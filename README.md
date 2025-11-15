@@ -43,7 +43,7 @@ blog-app/
 
 ## Deployment Urls
 - Frontend: https://mernblogg.netlify.app/
-- https://devops-98ix.onrender.com/
+- Backend: https://devops-98ix.onrender.com/
 
 ## 🏃‍♂️ Quick Start
 
