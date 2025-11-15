@@ -14,9 +14,12 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://your-frontend-domain.vercel.app'],
+  credentials: true
+}));
+
+app.use(express.json());
 
 // Basic route for testing
 app.get('/api/health', (req, res) => {
@@ -24,6 +27,32 @@ app.get('/api/health', (req, res) => {
     message: 'Server is running!',
     timestamp: new Date().toISOString()
   });
+});
+
+// Advanced health check
+app.get('/api/health/detailed', async (req, res) => {
+  try {
+    const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+    const memoryUsage = process.memoryUsage();
+    
+    res.json({
+      status: 'OK',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV,
+      database: dbStatus,
+      uptime: process.uptime(),
+      memory: {
+        rss: `${Math.round(memoryUsage.rss / 1024 / 1024)} MB`,
+        heapTotal: `${Math.round(memoryUsage.heapTotal / 1024 / 1024)} MB`,
+        heapUsed: `${Math.round(memoryUsage.heapUsed / 1024 / 1024)} MB`
+      }
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'ERROR',
+      error: error.message
+    });
+  }
 });
 
 // Import routes with error handling
@@ -36,6 +65,7 @@ try {
   console.log('✅ All routes imported successfully');
 } catch (importError) {
   console.error('❌ Error importing routes:', importError.message);
+
   // Create basic routes if imports fail
   postRoutes = express.Router();
   categoryRoutes = express.Router();
