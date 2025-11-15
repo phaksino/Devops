@@ -82,6 +82,10 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+# Root dependencies
+package-lock.json
+node_modules/
 *.swp
 *.swo
 
