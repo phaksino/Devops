@@ -41,6 +41,9 @@ blog-app/
 │ └── server.js
 └── README.md
 
+## Deployment Urls
+- Frontend: https://mernblogg.netlify.app/
+- https://devops-98ix.onrender.com/
 
 ## 🏃‍♂️ Quick Start
 
